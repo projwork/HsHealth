@@ -31,6 +31,8 @@ builder.Services.AddSingleton<IDbConnectionFactory, SqliteConnectionFactory>();
 
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();
 
