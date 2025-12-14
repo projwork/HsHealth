@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientMenu.Api.Data;
+using PatientMenu.Api.Infrastructure;
 using PatientMenu.Api.Interface;
 using PatientMenu.Api.Models;
+using PatientMenu.Api.Repositories;
+using PatientMenu.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +18,19 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<TenantIdHeaderOperationFilter>();
+});
 
 builder.Services.AddDbContext<MenuDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<DatabaseBootstrap>();
 builder.Services.AddSingleton<IDbConnectionFactory, SqliteConnectionFactory>();
+
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 
 var app = builder.Build();
 
